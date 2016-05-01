@@ -1,0 +1,70 @@
+{
+  "name": "vscode-puglint",
+  "displayName": "puglint",
+  "description": "Linter and style checker for Pug (formerly Jade)",
+  "version": "0.1.0",
+  "publisher": "mrmlnc",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^0.10.1"
+  },
+  "icon": "icon.png",
+  "author": {
+    "name": "Denis Malinochkin",
+    "url": "www.canonium.com"
+  },
+  "homepage": "https://github.com/mrmlnc/vscode-puglint/blob/master/README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mrmlnc/vscode-puglint"
+  },
+  "categories": [
+    "Linters"
+  ],
+  "activationEvents": [
+    "onLanguage:pug",
+    "onLanguage:jade"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "puglint configuration options",
+      "properties": {
+        "puglint.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Control whether pug-lint is enabled for CSS/SCSS files or not."
+        },
+        "puglint.config": {
+          "type": "object",
+          "default": null,
+          "description": "A pug-lint configuration object."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "xo"
+  },
+  "dependencies": {
+    "co": "^4.6.0",
+    "pug-lint": "^2.1.7",
+    "vscode-languageclient": "^2.1.0",
+    "vscode-languageserver": "^2.1.2"
+  },
+  "devDependencies": {
+    "vscode": "^0.11.12",
+    "xo": "^0.15.0"
+  },
+  "xo": {
+    "rules": {
+      "indent": [2, 2, { "SwitchCase": 1 }],
+      "arrow-parens": [2, "always"],
+      "object-curly-spacing": [2, "always"],
+      "babel/object-curly-spacing": 0,
+      "space-before-function-paren": [2, "never"]
+    }
+  }
+}

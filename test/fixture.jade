@@ -1,0 +1,25 @@
+doctype html
+html(lang='en')
+  head
+    title= pageTitle
+    script(type='text/javascript').
+      if (foo) {
+         bar(1 + 5)
+      }
+  body
+    h1 Jade - node template engine
+    #container.col
+      if youAreUsingJade
+        p You are amazing
+      else
+        p Get on it!
+
+      br(role='invalid')
+
+      p.
+        Jade is a terse and simple
+        templating language with a
+        strong focus on performance
+        and powerful features.
+
+      span( role='such spaces produce pug-lint messages as an array' )
