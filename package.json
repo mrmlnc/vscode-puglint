@@ -6,9 +6,9 @@
   "publisher": "mrmlnc",
   "license": "MIT",
   "engines": {
-    "vscode": "^0.10.1"
+    "vscode": "^1.0.0"
   },
-  "icon": "icon.png",
+  "icon": "icon.svg",
   "author": {
     "name": "Denis Malinochkin",
     "url": "www.canonium.com"
