@@ -45,18 +45,17 @@
     }
   },
   "scripts": {
-    "postinstall": "node ./node_modules/vscode/bin/install",
     "test": "xo"
   },
   "dependencies": {
     "co": "^4.6.0",
-    "pug-lint": "^2.1.7",
-    "vscode-languageclient": "^2.1.0",
-    "vscode-languageserver": "^2.1.2"
+    "pug-lint": "^2.1.8",
+    "vscode-languageclient": "^2.2.1",
+    "vscode-languageserver": "^2.2.0"
   },
   "devDependencies": {
-    "vscode": "^0.11.12",
-    "xo": "^0.15.0"
+    "vscode": "^0.11.13",
+    "xo": "^0.15.1"
   },
   "xo": {
     "rules": {
