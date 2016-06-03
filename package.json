@@ -49,7 +49,6 @@
   },
   "dependencies": {
     "co": "^4.6.0",
-    "pug-lint": "^2.1.8",
     "vscode-languageclient": "^2.2.1",
     "vscode-languageserver": "^2.2.0"
   },
