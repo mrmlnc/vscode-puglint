@@ -34,7 +34,7 @@
         "puglint.enable": {
           "type": "boolean",
           "default": true,
-          "description": "Control whether pug-lint is enabled for Jade/Pug files or not."
+          "description": "Control whether pug-lint is enabled for Pug/Jade files or not."
         },
         "puglint.config": {
           "type": "object",
