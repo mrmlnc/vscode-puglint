@@ -2,7 +2,7 @@
   "name": "vscode-puglint",
   "displayName": "puglint",
   "description": "Linter and style checker for Pug (formerly Jade)",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "publisher": "mrmlnc",
   "license": "MIT",
   "engines": {
@@ -34,7 +34,7 @@
         "puglint.enable": {
           "type": "boolean",
           "default": true,
-          "description": "Control whether pug-lint is enabled for Jade/Pug files or not."
+          "description": "Control whether pug-lint is enabled for Pug/Jade files or not."
         },
         "puglint.config": {
           "type": "object",
@@ -49,7 +49,6 @@
   },
   "dependencies": {
     "co": "^4.6.0",
-    "pug-lint": "^2.1.8",
     "vscode-languageclient": "^2.2.1",
     "vscode-languageserver": "^2.2.0"
   },

@@ -3,17 +3,41 @@
 const path = require('path');
 const fs = require('fs');
 const userHome = require('os').homedir();
-const Linter = require('pug-lint');
-
 const co = require('co');
-const langServer = require('vscode-languageserver');
+const {
+  createConnection,
+  TextDocuments,
+  DiagnosticSeverity,
+  Files,
+  ErrorMessageTracker,
+  ResponseError
+} = require('vscode-languageserver');
 
-const connection = langServer.createConnection(process.stdin, process.stdout);
-const documents = new langServer.TextDocuments();
+const connection = createConnection(process.stdin, process.stdout);
+const documents = new TextDocuments();
 
+let linter;
 let workspaceDir;
 let editorSettings;
-let userConfig;
+let linterOptions;
+
+/**
+ * Format error message
+ *
+ * @param {Object} err
+ * @param {Object} document
+ * @returns {String}
+ */
+function getMessage(err, document) {
+  let result = null;
+  if (typeof err.message === 'string') {
+    result = err.message.replace(/\r?\n/g, ' ');
+  } else {
+    result = `An unknown error occured while validating file: ${Files.uriToFilePath(document.uri)}`;
+  }
+
+  return result;
+}
 
 /**
  * Load configuration file
@@ -64,7 +88,6 @@ function searchConfig(dir) {
 
 /**
  * Setting config based on priorities
- *
  */
 function setConfig() {
   return new Promise((resolve) => {
@@ -85,16 +108,19 @@ function setConfig() {
       }
 
       if (!editorSettings || Object.keys(editorSettings).length === 0) {
-        return { preset: 'clock' };
+        return {};
       }
 
       return editorSettings;
     }).then((config) => {
-      userConfig = config;
+      linterOptions = config;
       resolve(true);
     }).catch((err) => {
-      connection.window.showWarningMessage('puglint: ' + err.toString());
-      userConfig = { preset: 'clock' };
+      if (err.code !== 'ENOENT') {
+        connection.window.showWarningMessage('puglint: ' + err.toString());
+      }
+
+      linterOptions = {};
     });
   });
 }
@@ -106,17 +132,54 @@ function setConfig() {
  * @returns {Object} diagnostic object
  */
 function makeDiagnostic(problem) {
-  const errorCode = problem.code.replace(/(PUG:|LINT_)/g, '');
-  const errorMsg = (Array.isArray(problem.msg) ? problem.msg.join(' ') : problem.msg).replace('\n', '');
+  const code = problem.code.replace(/(PUG:|LINT_)/g, '');
+  const message = (Array.isArray(problem.msg) ? problem.msg.join(' ') : problem.msg).replace('\n', '');
 
   return {
-    severity: langServer.DiagnosticSeverity.Error,
+    // All pug-lint errors are Errors in our world
+    severity: DiagnosticSeverity.Error,
     range: {
-      start: { line: problem.line - 1, character: problem.column },
-      end: { line: problem.line - 1, character: problem.column }
+      start: {
+        line: problem.line - 1,
+        character: problem.column
+      },
+      end: {
+        line: problem.line - 1,
+        character: problem.column
+      }
     },
-    message: `puglint: ${errorMsg} [${errorCode}]`
+    source: 'puglint',
+    message: `${message} [${code}]`
   };
+}
+
+/**
+ * Validation
+ *
+ * @param {Object} document
+ */
+function validate(document) {
+  const content = document.getText();
+  const uri = document.uri;
+
+  // ---> Maybe there's another way?
+  const extendPath = linterOptions.hasOwnProperty('extends');
+  if (extendPath && path.basename(extendPath) === extendPath) {
+    linterOptions.extends = `./node_modules/pug-lint-config-${linterOptions.extends}/index.js`;
+  }
+  // <---
+
+  linter.configure(linterOptions);
+
+  const diagnostics = [];
+  const report = linter.checkString(content, Files.uriToFilePath(uri));
+  if (report.length > 0) {
+    report.forEach((problem) => {
+      diagnostics.push(makeDiagnostic(problem));
+    });
+  }
+
+  connection.sendDiagnostics({ uri, diagnostics });
 }
 
 /**
@@ -124,69 +187,79 @@ function makeDiagnostic(problem) {
  *
  * @param {Object} document
  */
-function validate(document) {
-  const uri = document.uri;
-  const diagnostics = [];
-  const linter = new Linter();
-
+function validateSingle(document) {
   try {
-    linter.configure(userConfig);
-
-    const report = linter.checkString(document.getText(), langServer.Files.uriToFilePath(uri));
-    report.forEach((problem) => diagnostics.push(makeDiagnostic(problem)));
-
-    connection.sendDiagnostics({ uri, diagnostics });
+    validate(document);
   } catch (err) {
-    connection.window.showErrorMessage('puglint: ' + err.toString());
+    connection.window.showErrorMessage(getMessage(err, document));
   }
 }
 
 /**
  * Validation of all documents
  *
+ * @param {Array} documents
  */
-function validateAll() {
-  return Promise.all(documents.all().map((document) => validate(document)));
+function validateMany(documents) {
+  const tracker = new ErrorMessageTracker();
+  documents.forEach((document) => {
+    try {
+      validate(document);
+    } catch (err) {
+      tracker.add(getMessage(err, document));
+    }
+  });
+
+  tracker.sendErrors(connection);
 }
 
-/**
- * Initialization
- *
- */
-connection.onInitialize((params) => {
-  if (params.rootPath) {
-    workspaceDir = params.rootPath;
-  }
+// The documents manager listen for text document create, change
+// and close on the connection
+documents.listen(connection);
 
-  return {
-    capabilities: {
-      textDocumentSync: documents.syncKind
-    }
-  };
+// A text document has changed. Validate the document.
+documents.onDidChangeContent((event) => {
+  if (linterOptions) {
+    validateSingle(event.document);
+  }
 });
 
-/**
- * An event handler for changes Editor settings
- *
- */
+connection.onInitialize((params) => {
+  workspaceDir = params.rootPath;
+  return Files.resolveModule(workspaceDir, 'pug-lint')
+    .then((Linter) => {
+      linter = new Linter();
+
+      return {
+        capabilities: {
+          textDocumentSync: documents.syncKind
+        }
+      };
+    })
+    .catch(() => {
+      const res = {
+        code: 99,
+        message: 'Failed to load pug-lint library. Please install pug-lint in your workspace folder using \'npm install pug-lint\' or globally using \'npm install -g pug-lint\' and then press Retry.',
+        options: {
+          retry: true
+        }
+      };
+
+      return Promise.reject(new ResponseError(res.code, res.message, res.options));
+    });
+});
+
 connection.onDidChangeConfiguration((params) => {
   editorSettings = params.settings.puglint.config;
   setConfig().then(() => {
-    validateAll();
+    validateMany(documents.all());
   });
 });
 
-/**
- * An event handler for the changing configuration files
- *
- */
 connection.onDidChangeWatchedFiles(() => {
   setConfig().then(() => {
-    validateAll();
+    validateMany(documents.all());
   });
 });
-
-documents.onDidChangeContent((event) => validate(event.document));
-documents.listen(connection);
 
 connection.listen();

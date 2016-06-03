@@ -4,11 +4,14 @@ const path = require('path');
 const userHome = require('os').homedir();
 
 const vscode = require('vscode');
-const langClient = require('vscode-languageclient');
+const {
+  LanguageClient,
+  SettingMonitor
+} = require('vscode-languageclient');
 
 function activate(context) {
   const serverModule = path.join(__dirname, 'server.js');
-  const client = new langClient.LanguageClient('puglint', {
+  const client = new LanguageClient('puglint', {
     run: {
       module: serverModule
     },
@@ -22,11 +25,14 @@ function activate(context) {
     documentSelector: ['jade', 'pug'],
     synchronize: {
       configurationSection: 'puglint',
-      fileEvents: vscode.workspace.createFileSystemWatcher(`{${userHome},**}/{.jade-lint,.pug-lint,package}{rc,.json}`)
+      fileEvents: [
+        vscode.workspace.createFileSystemWatcher(`{${userHome},**}/.{jade-lint,pug-lint}{rc,.js,.json}`),
+        vscode.workspace.createFileSystemWatcher(`**/package.json`)
+      ]
     }
   });
 
-  context.subscriptions.push(new langClient.SettingMonitor(client, 'puglint.enable').start());
+  context.subscriptions.push(new SettingMonitor(client, 'puglint.enable').start());
 }
 
 exports.activate = activate;

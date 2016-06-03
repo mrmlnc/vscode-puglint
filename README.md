@@ -6,7 +6,9 @@
 
 ## Installation
 
-To install, press `F1` and select `Extensions: Install Extensions` and then search and choose `puglint`.
+First, install `pug-lint` use `npm i --save-dev pug-lint` or `npm i -g pug-lint`.
+
+Next, to install extension, press `F1` and select `Extensions: Install Extensions`, then search and choose `puglint`.
 
 See the [extension installation guide](https://code.visualstudio.com/docs/editor/extension-gallery) for details.
 
@@ -62,6 +64,19 @@ For example:
   }
 }
 ```
+
+Examples for use `extends` (don't forget to install config, for example [`pug-lint-config-clock`](https://github.com/clocklimited/pug-lint-config-clock)):
+
+```json
+{
+  "puglint.enable": true,
+  "puglint.config": {
+    "extends": "clock"
+  }
+}
+```
+
+More information: [pug-lint: extends](https://github.com/pugjs/pug-lint#extends)
 
 ## Changelog
 
