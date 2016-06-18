@@ -2,7 +2,7 @@
   "name": "vscode-puglint",
   "displayName": "puglint",
   "description": "Linter and style checker for Pug (formerly Jade)",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "publisher": "mrmlnc",
   "license": "MIT",
   "engines": {
