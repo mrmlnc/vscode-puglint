@@ -6,9 +6,9 @@
 
 ## Installation
 
-First, install `pug-lint` use `npm i --save-dev pug-lint` or `npm i -g pug-lint`.
+First, install `pug-lint` use `npm i -D pug-lint` or `npm i -g pug-lint`.
 
-Next, to install extension, press `F1` and select `Extensions: Install Extensions`, then search and choose `puglint`.
+Next, to install extension, press `F1` and select `Extensions: Install Extensions`, then search and choose `vscode-puglint`.
 
 See the [extension installation guide](https://code.visualstudio.com/docs/editor/extension-gallery) for details.
 
@@ -27,16 +27,16 @@ Enable the linter in the VS Code [settings](https://code.visualstudio.com/docs/c
 The plugin supports the following files:
 
   * `.jade-lintrc` or `.jade-lint.json`
-  * `.pug-lintrc` or `.pug-lint.json`
+  * `.pug-lintrc`, `.pug-lintrc.js`, `.pug-lintrc.json` or `.pug-lint.json`
   * `package.json`
 
 The rules for determining the configuration file:
 
-  1. Workspace config (current project)
-  2. Package file (current project)
-  3. Global config ($HOME directory)
-  4. Editor settings
-  5. Default config (preset "clock")
+  1. Editor settings
+  2. Workspace config (current project)
+  3. Package file (current project)
+  4. Global config ($HOME directory)
+  5. Default config `{}`
 
 ## Supported settings
 

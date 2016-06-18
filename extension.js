@@ -4,10 +4,7 @@ const path = require('path');
 const userHome = require('os').homedir();
 
 const vscode = require('vscode');
-const {
-  LanguageClient,
-  SettingMonitor
-} = require('vscode-languageclient');
+const { LanguageClient, SettingMonitor } = require('vscode-languageclient');
 
 function activate(context) {
   const serverModule = path.join(__dirname, 'server.js');
@@ -26,7 +23,7 @@ function activate(context) {
     synchronize: {
       configurationSection: 'puglint',
       fileEvents: [
-        vscode.workspace.createFileSystemWatcher(`{${userHome},**}/.{jade-lint,pug-lint}{rc,.js,.json}`),
+        vscode.workspace.createFileSystemWatcher(`{${userHome},**}/.{jade-lint,pug-lint}{rc,.json,rc.json}`),
         vscode.workspace.createFileSystemWatcher(`**/package.json`)
       ]
     }
