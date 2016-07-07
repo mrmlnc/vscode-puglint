@@ -18,6 +18,11 @@
     "type": "git",
     "url": "https://github.com/mrmlnc/vscode-puglint"
   },
+  "keywords": [
+    "pug",
+    "jade",
+    "linter"
+  ],
   "categories": [
     "Linters"
   ],
