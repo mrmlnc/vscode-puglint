@@ -43,7 +43,7 @@
         },
         "puglint.config": {
           "type": "object",
-          "default": null,
+          "default": {},
           "description": "A pug-lint configuration object."
         }
       }
