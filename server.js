@@ -160,4 +160,8 @@ connection.onDidChangeWatchedFiles(() => {
   validateMany(documents.all());
 });
 
+documents.onDidClose((event) => {
+  connection.sendDiagnostics({ uri: event.document.uri, diagnostics: [] });
+});
+
 connection.listen();
