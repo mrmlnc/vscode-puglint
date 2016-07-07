@@ -138,7 +138,7 @@ connection.onInitialize((params) => {
       if (err.code === 'ENOENT') {
         const res = {
           code: 99,
-          message: 'Failed to load pug-lint library. Please install pug-lint in your workspace folder using \'npm install pug-lint\' or globally using \'npm install -g pug-lint\' and then press Retry.',
+          message: 'Failed to load pug-lint library. Please install pug-lint in your workspace folder using **npm install pug-lint** or globally using **npm install -g pug-lint** and then press Retry.',
           options: {
             retry: true
           }
