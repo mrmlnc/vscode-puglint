@@ -42,15 +42,15 @@ The rules for determining the configuration file:
 
 **puglint.enable**
 
-Type: `Boolean`
-Default: `false`
+  * Type: `Boolean`
+  * Default: `false`
 
 Control whether puglint is enabled for Pug/Jade files or not.
 
 **puglint.config**
 
-Type: `Object`
-Default: `null`
+  * Type: `Object`
+  * Default: `{}`
 
 Will be directly passed to [config option](https://github.com/pugjs/pug-lint/blob/master/docs/rules.md).
 
