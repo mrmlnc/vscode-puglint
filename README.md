@@ -6,9 +6,11 @@
 
 ## Installation
 
-First, install `pug-lint` use `npm i -D pug-lint` or `npm i -g pug-lint`.
+Linter installation is performed in several stages:
 
-Next, to install extension, press `F1` and select `Extensions: Install Extensions`, then search and choose `vscode-puglint`.
+  1. Install **pug-lint** use `npm i -D pug-lint` or `npm i -g pug-lint`.
+  2. Press `F1` and select `Extensions: Install Extensions`.
+  3. Search and choose `vscode-puglint`.
 
 See the [extension installation guide](https://code.visualstudio.com/docs/editor/extension-gallery) for details.
 
@@ -37,6 +39,11 @@ The rules for determining the configuration file:
   3. Package file (current project)
   4. Global config ($HOME directory)
   5. Default config `{}`
+
+## Supported languages
+
+  * Pug
+  * Jade
 
 ## Supported settings
 
