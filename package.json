@@ -38,7 +38,7 @@
       "properties": {
         "puglint.enable": {
           "type": "boolean",
-          "default": true,
+          "default": false,
           "description": "Control whether pug-lint is enabled for Pug/Jade files or not."
         },
         "puglint.config": {
@@ -53,8 +53,6 @@
     "test": "xo"
   },
   "dependencies": {
-    "resolve": "^1.1.7",
-    "which": "^1.2.10",
     "vscode-languageclient": "^2.3.0",
     "vscode-languageserver": "^2.2.1"
   },

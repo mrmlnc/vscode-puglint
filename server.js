@@ -57,10 +57,10 @@ function validate(document) {
   const uri = document.uri;
   const url = Files.uriToFilePath(uri);
 
-  if (editorConfig) {
-    linterOptions = editorConfig;
-  } else {
+  if (Object.keys(editorConfig).length === 0) {
     linterOptions = configFile.load(null, path.dirname(url));
+  } else {
+    linterOptions = editorConfig;
   }
 
   if (!linterOptions) {
@@ -120,10 +120,11 @@ documents.onDidChangeContent((event) => {
 });
 
 connection.onInitialize((params) => {
-  return resolve('pug-lint', params.rootPath, connection)
-    .then((filepath) => {
-      const configPath = path.join(path.dirname(filepath), 'config-file.js');
-      const Linter = require(filepath);
+  return resolve(params.rootPath, 'pug-lint')
+    .then((dirname) => {
+      const modulePath = path.join(dirname, 'lib', 'linter.js');
+      const configPath = path.join(dirname, 'lib', 'config-file.js');
+      const Linter = require(modulePath);
 
       configFile = require(configPath);
       linter = new Linter();
