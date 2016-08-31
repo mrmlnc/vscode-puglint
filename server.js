@@ -3,6 +3,8 @@
 const path = require('path');
 const {
   createConnection,
+  IPCMessageReader,
+  IPCMessageWriter,
   TextDocuments,
   DiagnosticSeverity,
   Files,
@@ -11,7 +13,7 @@ const {
 } = require('vscode-languageserver');
 const resolve = require('./lib/resolve');
 
-const connection = createConnection(process.stdin, process.stdout);
+const connection = createConnection(new IPCMessageReader(process), new IPCMessageWriter(process));
 const documents = new TextDocuments();
 
 let configFile;

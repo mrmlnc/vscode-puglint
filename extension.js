@@ -4,21 +4,29 @@ const path = require('path');
 const userHome = require('os').homedir();
 
 const vscode = require('vscode');
-const { LanguageClient, SettingMonitor } = require('vscode-languageclient');
+const {
+  TransportKind,
+  LanguageClient,
+  SettingMonitor
+} = require('vscode-languageclient');
 
 function activate(context) {
   const serverModule = path.join(__dirname, 'server.js');
-  const client = new LanguageClient('puglint', {
+  const clientOptions = {
     run: {
-      module: serverModule
+      module: serverModule,
+      transport: TransportKind.ipc
     },
     debug: {
       module: serverModule,
+      transport: TransportKind.ipc,
       options: {
-        execArgv: ['--nolazy']
+        execArgv: ['--nolazy', '--debug=6004']
       }
     }
-  }, {
+  };
+
+  const serverOptions = {
     documentSelector: ['jade', 'pug'],
     synchronize: {
       configurationSection: 'puglint',
@@ -27,7 +35,9 @@ function activate(context) {
         vscode.workspace.createFileSystemWatcher(`**/package.json`)
       ]
     }
-  });
+  };
+
+  const client = new LanguageClient('puglint', clientOptions, serverOptions);
 
   context.subscriptions.push(new SettingMonitor(client, 'puglint.enable').start());
 }
