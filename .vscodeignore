@@ -2,4 +2,4 @@
 typings/**
 test/**
 .gitignore
-jsconfig.json
+.travis.yml
