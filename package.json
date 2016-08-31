@@ -8,7 +8,7 @@
   "engines": {
     "vscode": "^1.0.0"
   },
-  "icon": "icon.svg",
+  "icon": "icon.png",
   "author": {
     "name": "Denis Malinochkin",
     "url": "www.canonium.com"
