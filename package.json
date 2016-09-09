@@ -57,7 +57,7 @@
     "vscode-languageserver": "2.2.1"
   },
   "devDependencies": {
-    "vscode": "^0.11.13",
+    "vscode": "^0.11.18",
     "xo": "^0.16.0"
   },
   "xo": {
