@@ -1,4 +1,4 @@
-# VS Code plugin for pug-lint
+# vscode-puglint
 
 > This linter plugin for VS Code provides an interface to [pug-lint](https://github.com/pugjs/pug-lint).
 
@@ -9,7 +9,7 @@
 Linter installation is performed in several stages:
 
   1. Install **pug-lint** use `npm i -D pug-lint` or `npm i -g pug-lint`.
-  2. Press `F1` and select `Extensions: Install Extensions`.
+  2. Press <kbd>F1</kbd> and select `Extensions: Install Extensions`.
   3. Search and choose `vscode-puglint`.
 
 See the [extension installation guide](https://code.visualstudio.com/docs/editor/extension-gallery) for details.
@@ -30,7 +30,7 @@ The plugin supports the following files:
 
   * `.jade-lintrc` or `.jade-lint.json`
   * `.pug-lintrc`, `.pug-lintrc.js`, `.pug-lintrc.json` or `.pug-lint.json`
-  * `package.json`
+  * `pugLintConfig` section in the `package.json` file
 
 The rules for determining the configuration file:
 
@@ -53,6 +53,14 @@ The rules for determining the configuration file:
   * Default: `false`
 
 Control whether puglint is enabled for Pug/Jade files or not.
+
+**puglint.run**
+
+  * Type: `String`
+  * Default: `onType`
+  * Supported values: `onType`, `onSave`
+
+Run the linter on save (onSave) or on type (onType).
 
 **puglint.config**
 
