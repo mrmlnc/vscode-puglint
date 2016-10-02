@@ -188,7 +188,18 @@ connection.onInitialize((params) => {
 		// We only want to show the pug-lint load failed error, when the workspace is configured for pug-lint.
 		return readdir(params.rootPath).then((files) => {
 			const configFiles: string[] = files.filter((file) => /\.(jade|pug)-lint(rc|rc\.js|rc\.json|\.json)$/.test(file));
-			if (configFiles.length !== 0) {
+
+			let packageFile = {
+				pugLintConfig: null
+			};
+
+			try {
+				packageFile = require(`${params.rootPath}/package.json`);
+			} catch (err) {
+				// Skip error
+			}
+
+			if (configFiles.length !== 0 || Object.keys(packageFile.pugLintConfig).length !== 0) {
 				return Promise.reject(new ResponseError<InitializeError>(99, puglintNotFound, { retry: true }));
 			}
 		});
