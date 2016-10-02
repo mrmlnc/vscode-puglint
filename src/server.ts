@@ -151,7 +151,7 @@ allDocuments.onDidChangeContent((event) => {
 });
 
 allDocuments.onDidSave((event) => {
-	if (editorSettings.run === 'onSave') {
+	if (configResolver && editorSettings.run === 'onSave') {
 		validateSingle(event.document);
 	}
 });
@@ -189,17 +189,14 @@ connection.onInitialize((params) => {
 		return readdir(params.rootPath).then((files) => {
 			const configFiles: string[] = files.filter((file) => /\.(jade|pug)-lint(rc|rc\.js|rc\.json|\.json)$/.test(file));
 
-			let packageFile = {
-				pugLintConfig: null
-			};
-
+			let packageFile;
 			try {
 				packageFile = require(`${params.rootPath}/package.json`);
 			} catch (err) {
 				// Skip error
 			}
 
-			if (configFiles.length !== 0 || Object.keys(packageFile.pugLintConfig).length !== 0) {
+			if (configFiles.length !== 0 || (packageFile && packageFile.hasOwnProperty('pugLintConfig'))) {
 				return Promise.reject(new ResponseError<InitializeError>(99, puglintNotFound, { retry: true }));
 			}
 		});
@@ -208,12 +205,18 @@ connection.onInitialize((params) => {
 
 connection.onDidChangeConfiguration((params) => {
 	editorSettings = params.settings.puglint;
+	if (!configResolver) {
+		return;
+	}
 
 	validateMany(allDocuments.all());
 });
 
 connection.onDidChangeWatchedFiles(() => {
 	configWatcherStatus = true;
+	if (!configResolver) {
+		return;
+	}
 
 	validateMany(allDocuments.all());
 });
