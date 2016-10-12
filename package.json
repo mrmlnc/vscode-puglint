@@ -57,7 +57,7 @@
   },
   "dependencies": {
     "vscode-languageclient": "2.5.0",
-    "vscode-languageserver": "2.5.1",
+    "vscode-languageserver": "2.6.0",
     "npm-module-path": "2.0.0"
   },
   "devDependencies": {
