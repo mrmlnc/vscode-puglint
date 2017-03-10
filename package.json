@@ -61,7 +61,7 @@
     "npm-module-path": "2.0.0"
   },
   "devDependencies": {
-    "vscode": "^1.0.0",
+    "vscode": "^1.1.0",
     "typescript": "^2.0.3",
     "tslint": "^3.15.1"
   },
